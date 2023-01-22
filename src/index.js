@@ -8,11 +8,16 @@
 // OR move the entire script tag to 
 // before or after the closing </body> tag
 
+let allDogs = []
+
 function getPups() {
     fetch(`http://localhost:3000/pups`)
     // make it a habit to use `` for fetch URL
     .then(response => response.json())
-    .then(data => data.forEach(allPups))
+    .then(data => {
+        data.forEach(allPups)
+        allDogs = data
+    })
 }
 
 getPups()
@@ -26,6 +31,7 @@ getPups()
 
 const dogInfo = document.querySelector("#dog-info")
 const dogBar =  document.querySelector("#dog-bar")
+const dogFilter = document.querySelector("#good-dog-filter")
 
 function onePup (pup) {  
     dogInfo.innerHTML = ''
@@ -65,7 +71,7 @@ function allPups (pup) {
 }
 
 function handlePatch(dogStatus, pup) {
-
+// ^pup is a placeholder that stores the data from fetch
     fetch(`http://localhost:3000/pups/${pup.id}` , {
         method: 'PATCH',
         headers: {
@@ -79,4 +85,41 @@ function handlePatch(dogStatus, pup) {
     .then(response => response.json())
     .then(data => onePup(data))
 }
+
+
+
+let toggle = true;
+
+dogFilter.addEventListener('click', () => {
+    toggle = !toggle; 
+    // ^ write this before if statement b/c when you have it after if statement
+    // the very first time you click it would remain OFF because it's true
+    
+    if (toggle === true) {
+        dogFilter.textContent = 'Filter good dogs: OFF'
+    } else {
+        dogFilter.textContent = 'Filter good dogs: ON'
+
+        function goodDogs(dogs) {
+            console.log(dogs)
+            const filtered = dogs.filter(pup => pup.isGoodDog === true)
+            // console.log(filtered)
+            dogBar.textContent = ''
+
+            filtered.forEach(dog => {
+                const span = document.createElement('span')
+                span.id = 'pup-name'
+                span.textContent = dog.name
+                
+                dogBar.appendChild(span)
+            })
+    
+        }
+        goodDogs(allDogs)
+
+    }
+    // console.log(toggle)
+    
+})
+
 
