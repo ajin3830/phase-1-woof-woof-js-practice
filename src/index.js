@@ -97,11 +97,15 @@ dogFilter.addEventListener('click', () => {
     
     if (toggle === true) {
         dogFilter.textContent = 'Filter good dogs: OFF'
+        // If the filter is OFF 
+        // the Dog Bar should show all pups !!!!FIX IT!!
+        dogBar.textContent = ''
+        return getPups(allDogs)
     } else {
         dogFilter.textContent = 'Filter good dogs: ON'
 
         function goodDogs(dogs) {
-            console.log(dogs)
+            // console.log(dogs)
             const filtered = dogs.filter(pup => pup.isGoodDog === true)
             // console.log(filtered)
             dogBar.textContent = ''
@@ -110,7 +114,9 @@ dogFilter.addEventListener('click', () => {
                 const span = document.createElement('span')
                 span.id = 'pup-name'
                 span.textContent = dog.name
-                
+                span.addEventListener('click', () => {
+                    onePup(dog)
+                })
                 dogBar.appendChild(span)
             })
     
